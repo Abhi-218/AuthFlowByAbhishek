@@ -29,7 +29,10 @@ export async function POST(request: NextRequest) {
         console.log("saveduser._id ======", savedUser._id)
        return NextResponse.json({message: "user register successfully ",savedUser  })
 
-    } catch (error:any) {
-        return NextResponse.json({error : error.message},{status : 500})
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            return NextResponse.json({ error: `this is Signup Error ===== ${error.message}` }, { status: 500 });
+        }
+        return NextResponse.json({ error: `this is Signup Error ===== ${String(error)}` }, { status: 500 });
     }
 }

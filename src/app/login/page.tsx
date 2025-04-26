@@ -33,12 +33,19 @@ export default function LoginPage() {
       setTimeout(() => {
         router.push("/profile");
       }, 800);
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.dismiss();
-      toast.error(error.response?.data?.error || "Check your credentials");
+      if (error instanceof Error) {
+        // If the error has a "response" property (like Axios errors)
+        const axiosError = error as { response?: { data?: { error?: string } } };
+        toast.error(axiosError.response?.data?.error || "Check your credentials");
+      } else {
+        toast.error("Check your credentials");
+      }
       setLoading(false);
       setButtonDisabled(false);
     }
+    
   };
 
   const containerVariants = {

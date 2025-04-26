@@ -41,14 +41,25 @@ export default function SignupPage() {
         router.push("/login");
       }, 800);
       
-    } catch (error : any) {
+    } catch (error: unknown) {
       toast.dismiss();
-      toast.error(error.response?.data?.error || "Something went wrong");
-
+    
+      let errorMessage = "Something went wrong";
+    
+      if (typeof error === "object" && error !== null) {
+        const maybeError = error as { response?: { data?: { error?: string } } };
+        if (maybeError.response?.data?.error) {
+          errorMessage = maybeError.response.data.error;
+        }
+      }
+    
+      toast.error(errorMessage);
+    
       console.log(error);
       setLoading(false);
       setButtonDisabled(false);
     }
+    
   };
 
   // Animation variants

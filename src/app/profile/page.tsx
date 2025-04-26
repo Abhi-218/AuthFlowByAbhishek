@@ -37,13 +37,14 @@ const ProfilePage = () => {
   const Logout = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("/Api/Users/logout");
+       await axios.get("/Api/Users/logout");
       
       // Animated transition before redirect
       setTimeout(() => {
         router.push("/login");
       }, 500);
     } catch (error) {
+      console.log(error);
       setLoading(false);
     }
   };

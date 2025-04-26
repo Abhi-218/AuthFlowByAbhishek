@@ -3,13 +3,10 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-// login 
-import axios from 'axios';
+// login
+import axios from "axios";
 import toast from "react-hot-toast";
-import { useRouter } from 'next/navigation';
-
-
-
+import { useRouter } from "next/navigation";
 
 export default function Hero() {
   const [isVisible, setIsVisible] = useState(false);
@@ -18,33 +15,29 @@ export default function Hero() {
     setIsVisible(true);
   }, []);
 
-   //=====================================================================
+  //=====================================================================
 
-   const router = useRouter();
-   const [user,setUser]=useState({
-     email : "",
-     password : "",
-   })
-  
+  const router = useRouter();
+  const [user, setUser] = useState({
+    email: "",
+    password: "",
+  });
 
-   const OnLogin = async () => {
-try {
- //  toast.loading('please wait')
-  const responce = await axios.post("/Api/Users/login",user)
-  console.log(responce.data)
-  toast.dismiss()
-  router.push("/profile")
- } catch (error:any) {
-   toast.dismiss()
-   toast.error("check your info")
- console.log(error)
-}
-   }
+  const OnLogin = async () => {
+    try {
+      //  toast.loading('please wait')
+      const responce = await axios.post("/Api/Users/login", user);
+      console.log(responce.data);
+      toast.dismiss();
+      router.push("/profile");
+    } catch (error: unknown) {
+      toast.dismiss();
+      toast.error("check your info");
+      console.log(error);
+    }
+  };
 
-
-
-
-//======================================================================
+  //======================================================================
 
   return (
     <div className="relative bg-gradient-to-br from-blue-50 to-purple-50 pt-16 overflow-hidden">
@@ -67,7 +60,9 @@ try {
                 </span>
               </h1>
               <p className="mt-3 text-base text-gray-500 sm:mt-5 sm:text-xl lg:text-lg xl:text-xl">
-                Robust authentication solution for modern web applications. Protect your users&apos; data with our secure, scalable, and easy-to-implement authentication system.
+                Robust authentication solution for modern web applications.
+                Protect your users&apos; data with our secure, scalable, and
+                easy-to-implement authentication system.
               </p>
               <div className="mt-8 sm:max-w-lg sm:mx-auto sm:text-center lg:text-left">
                 <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
@@ -92,20 +87,29 @@ try {
             </motion.div>
           </div>
           <div className="mt-12 sm:mt-16 lg:mt-0 lg:col-span-6">
-            <motion.div 
+            <motion.div
               className="relative mx-auto w-full rounded-lg shadow-lg lg:max-w-md"
               initial={{ opacity: 0, scale: 0.8 }}
-              animate={isVisible ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
+              animate={
+                isVisible
+                  ? { opacity: 1, scale: 1 }
+                  : { opacity: 0, scale: 0.8 }
+              }
               transition={{ duration: 0.8, delay: 0.4 }}
             >
               <div className="bg-white rounded-lg shadow-xl overflow-hidden">
                 <div className="px-4 py-5 sm:p-6">
                   <div className="space-y-6">
                     <div>
-                      <h3 className="text-lg font-medium leading-6 text-gray-900">Sign in</h3>
+                      <h3 className="text-lg font-medium leading-6 text-gray-900">
+                        Sign in
+                      </h3>
                     </div>
                     <div className="space-y-1">
-                      <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                      <label
+                        htmlFor="email"
+                        className="block text-sm font-medium text-gray-700"
+                      >
                         Email address
                       </label>
                       <div className="mt-1">
@@ -118,14 +122,17 @@ try {
                           className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                           placeholder="you@example.com"
                           value={user.email}
-                          onChange={(e)=>{
-                            setUser({...user,email : e.target.value})
+                          onChange={(e) => {
+                            setUser({ ...user, email: e.target.value });
                           }}
                         />
                       </div>
                     </div>
                     <div className="space-y-1">
-                      <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                      <label
+                        htmlFor="password"
+                        className="block text-sm font-medium text-gray-700"
+                      >
                         Password
                       </label>
                       <div className="mt-1">
@@ -138,8 +145,8 @@ try {
                           className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                           placeholder="••••••••"
                           value={user.password}
-                          onChange={(e)=>{
-                            setUser({...user,password : e.target.value})
+                          onChange={(e) => {
+                            setUser({ ...user, password: e.target.value });
                           }}
                         />
                       </div>
@@ -152,12 +159,18 @@ try {
                           type="checkbox"
                           className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                         />
-                        <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
+                        <label
+                          htmlFor="remember-me"
+                          className="ml-2 block text-sm text-gray-900"
+                        >
                           Remember me
                         </label>
                       </div>
                       <div className="text-sm">
-                        <a href="#" className="font-medium text-blue-600 hover:text-blue-500">
+                        <a
+                          href="#"
+                          className="font-medium text-blue-600 hover:text-blue-500"
+                        >
                           Forgot your password?
                         </a>
                       </div>
@@ -166,9 +179,9 @@ try {
                       <button
                         type="submit"
                         className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                        onClick={ OnLogin }
+                        onClick={OnLogin}
                       >
-                        Login 
+                        Login
                       </button>
                     </div>
                     <div className="mt-6">
@@ -177,21 +190,19 @@ try {
                           <div className="w-full border-t border-gray-300" />
                         </div>
                         <div className="relative flex justify-center text-sm">
-                          <span className="px-2 bg-white text-gray-500">Or continue with</span>
+                          <span className="px-2 bg-white text-gray-500">
+                            Or continue with
+                          </span>
                         </div>
                       </div>
                       <div className="mt-6 grid grid-cols-2 gap-3">
                         <div>
-                          <button
-                            className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-                          >
+                          <button className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
                             Google
                           </button>
                         </div>
                         <div>
-                          <button
-                            className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-                          >
+                          <button className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
                             GitHub
                           </button>
                         </div>
@@ -204,7 +215,7 @@ try {
           </div>
         </div>
       </div>
-      
+
       {/* Animated waves */}
       <div className="absolute bottom-0 left-0 right-0 overflow-hidden">
         <svg
@@ -214,7 +225,11 @@ try {
         >
           <motion.path
             initial={{ opacity: 0, pathLength: 0 }}
-            animate={isVisible ? { opacity: 1, pathLength: 1 } : { opacity: 0, pathLength: 0 }}
+            animate={
+              isVisible
+                ? { opacity: 1, pathLength: 1 }
+                : { opacity: 0, pathLength: 0 }
+            }
             transition={{ duration: 2, ease: "easeInOut" }}
             fill="currentColor"
             fillOpacity="1"
