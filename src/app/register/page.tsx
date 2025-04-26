@@ -32,7 +32,7 @@ export default function SignupPage() {
       setButtonDisabled(true);
       toast.loading("Creating your account...");
       
-      const response = await axios.post("/Api/Users/signup", user);
+      await axios.post("/Api/Users/signup", user);
       
       toast.dismiss();
       

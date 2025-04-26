@@ -24,7 +24,8 @@ export default function LoginPage() {
       setButtonDisabled(true);
       toast.loading("Logging you in...");
 
-      const response = await axios.post("/Api/Users/login", user);
+      await axios.post("/Api/Users/login", user);
+  
 
       toast.dismiss();
       toast.success("Login successful!");
@@ -35,7 +36,6 @@ export default function LoginPage() {
     } catch (error: any) {
       toast.dismiss();
       toast.error(error.response?.data?.error || "Check your credentials");
-      console.log(error);
       setLoading(false);
       setButtonDisabled(false);
     }
@@ -176,7 +176,7 @@ export default function LoginPage() {
 
               <motion.div variants={itemVariants} className="text-center mt-6">
                 <p className="text-gray-400">
-                  Don't have an account?{" "}
+                  Don&apos;t have an account?{" "}
                   <Link
                     href="/register"
                     className="text-blue-400 hover:text-blue-300 hover:underline transition-all"
@@ -192,7 +192,7 @@ export default function LoginPage() {
           variants={itemVariants}
           className="mt-4 text-center text-white/60 text-sm"
         >
-          Welcome back, we've missed you.
+          Welcome back, we&apos;ve missed you.
         </motion.div>
       </motion.div>
 

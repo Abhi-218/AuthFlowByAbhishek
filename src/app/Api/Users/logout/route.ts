@@ -1,8 +1,8 @@
 import { dbConnect } from "@/dbConfig/dbCongfig";
-import {NextRequest , NextResponse} from "next/server";
+import { NextResponse} from "next/server";
 dbConnect()
 
-export async function GET(request : NextRequest){
+export async function GET(){
      try {
         const response = NextResponse.json({
             message : "user logout successfully",

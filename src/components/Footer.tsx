@@ -14,7 +14,7 @@ export default function Footer() {
               </span>
             </h2>
             <p className="text-gray-500 text-base">
-              Secure authentication for modern web applications. Protect your users' data with our robust authentication system.
+              Secure authentication for modern web applications. Protect your users&apos; data with our robust authentication system.
             </p>
             <div className="flex space-x-6">
               <a href="#" className="text-gray-400 hover:text-gray-500">

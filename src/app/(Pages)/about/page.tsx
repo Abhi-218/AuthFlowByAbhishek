@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-
 export default function About() {
   const [isVisible, setIsVisible] = useState(false);
 
@@ -59,7 +58,7 @@ export default function About() {
     },
     {
       title: "Transparency",
-      description: "We're open about how our systems work, our pricing, and our roadmap for the future.",
+      description: "We&apos;re open about how our systems work, our pricing, and our roadmap for the future.",
     },
     {
       title: "Customer Success",
@@ -117,7 +116,7 @@ export default function About() {
               </span>
             </h1>
             <p className="mt-4 text-xl text-gray-500">
-              At AuthFlow, we're building the future of authentication and identity management.
+              At AuthFlow, we&apos;re building the future of authentication and identity management.
             </p>
           </motion.div>
 
@@ -131,7 +130,7 @@ export default function About() {
               <div className="lg:grid lg:grid-cols-2">
                 <div className="relative h-64 sm:h-96 lg:h-full">
                   <div className="h-full w-full bg-blue-100 flex items-center justify-center">
-                    <img 
+                    <Image 
                       src="/api/placeholder/800/600" 
                       alt="About AuthFlow" 
                       className="h-full w-full object-cover"
@@ -146,7 +145,7 @@ export default function About() {
                     robust features and ease of implementation.
                   </p>
                   <p className="mt-4 text-lg text-gray-500">
-                    We're building a platform that doesn't compromise on security while ensuring a seamless 
+                    We&apos;re building a platform that doesn&apos;t compromise on security while ensuring a seamless 
                     developer experience. Our team brings decades of combined experience in cybersecurity, 
                     identity management, and developer tools to create the authentication solution we 
                     always wished existed.
@@ -256,7 +255,7 @@ export default function About() {
                     transition={{ duration: 0.5, delay: 0.5 + index * 0.1 }}
                   >
                     <div className="relative h-60 w-full">
-                      <img 
+                      <Image
                         src={member.imageUrl} 
                         alt={member.name} 
                         className="h-full w-full object-cover"
@@ -282,7 +281,7 @@ export default function About() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
               <h2 className="text-3xl font-extrabold sm:text-4xl">Join us on our mission</h2>
               <p className="mt-4 text-xl max-w-2xl mx-auto">
-                We're always looking for talented people passionate about security and great user experiences.
+                We&apos;re always looking for talented people passionate about security and great user experiences.
               </p>
               <div className="mt-8">
                 <a

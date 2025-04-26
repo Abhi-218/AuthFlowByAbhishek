@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 // login 
 import axios from 'axios';
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { useRouter } from 'next/navigation';
 
 
@@ -25,15 +25,7 @@ export default function Hero() {
      email : "",
      password : "",
    })
-   const [buttondisabled,setbuttondisabled] = useState(true)
-   useEffect(() => {
-     if(user.email.length > 0 && user.password.length>0 ){
-               setbuttondisabled(false)
-             }
-             else{
-       setbuttondisabled(true)
-     }
-   }, [user]);
+  
 
    const OnLogin = async () => {
 try {
@@ -75,7 +67,7 @@ try {
                 </span>
               </h1>
               <p className="mt-3 text-base text-gray-500 sm:mt-5 sm:text-xl lg:text-lg xl:text-xl">
-                Robust authentication solution for modern web applications. Protect your users' data with our secure, scalable, and easy-to-implement authentication system.
+                Robust authentication solution for modern web applications. Protect your users&apos; data with our secure, scalable, and easy-to-implement authentication system.
               </p>
               <div className="mt-8 sm:max-w-lg sm:mx-auto sm:text-center lg:text-left">
                 <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">

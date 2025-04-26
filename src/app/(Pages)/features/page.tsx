@@ -170,18 +170,18 @@ export default function Features() {
                 <div className="bg-gradient-to-br from-blue-600 to-purple-600 shadow-xl rounded-lg p-8 text-white">
                   <pre className="font-mono text-sm overflow-x-auto">
                     {`// Easy to implement
-import { AuthFlow } from '@authflow/sdk';
+import { AuthFlow } from &apos;@authflow/sdk&apos;;
 
 const auth = new AuthFlow({
-  apiKey: 'your_api_key',
-  domain: 'your-app.com'
+  apiKey: &apos;your_api_key&apos;,
+  domain: &apos;your-app.com&apos;
 });
 
 // One line to authenticate
 const user = await auth.signIn(email, password);
 
 // Simple permission checks
-if (auth.can(user, 'access:admin')) {
+if (auth.can(user, &apos;access:admin&apos;)) {
   // Allow admin access
 }`}
                   </pre>

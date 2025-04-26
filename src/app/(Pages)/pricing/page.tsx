@@ -213,15 +213,15 @@ export default function Pricing() {
             {[
               {
                 question: "How do you count monthly active users?",
-                answer: "A monthly active user (MAU) is any unique user who authenticates at least once during a calendar month. We don't count API calls or page views—only authentication events."
+                answer: "A monthly active user (MAU) is any unique user who authenticates at least once during a calendar month. We don&apos;t count API calls or page views—only authentication events."
               },
               {
                 question: "Can I upgrade or downgrade my plan later?",
-                answer: "Yes, you can change your plan at any time. When upgrading, we'll prorate the remaining days in your billing cycle. When downgrading, the new pricing takes effect on your next billing date."
+                answer: "Yes, you can change your plan at any time. When upgrading, we&apos;ll prorate the remaining days in your billing cycle. When downgrading, the new pricing takes effect on your next billing date."
               },
               {
                 question: "Do you offer a free trial?",
-                answer: "All plans start with a 14-day free trial with full access to all features. No credit card required to start. You'll only be charged when you decide to continue with a paid plan."
+                answer: "All plans start with a 14-day free trial with full access to all features. No credit card required to start. You&apos;ll only be charged when you decide to continue with a paid plan."
               },
               {
                 question: "What payment methods do you accept?",
