@@ -9,7 +9,11 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "AuthFlow - Secure Authentication for Modern Web Apps",
   description: "Modern authentication system for web applications with secure login, registration, and user management.",
+  icons: {
+    icon: '/favicon.png', // Path to your PNG file
+  },
 };
+
 
 export default function RootLayout({
   children,
