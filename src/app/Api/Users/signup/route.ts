@@ -2,7 +2,6 @@ import { dbConnect } from "@/dbConfig/dbCongfig";
 import bcrypt from 'bcryptjs';
 import User from "@/Models/userModel";
 import {NextRequest , NextResponse} from "next/server";
-import { sendmail } from "@/helpers/mailer";
 
 dbConnect()
 
@@ -28,7 +27,6 @@ export async function POST(request: NextRequest) {
         console.log('saveduser ===========',savedUser)
         
         console.log("saveduser._id ======", savedUser._id)
-       await sendmail({email , emailType : "VERIFY" , userId : savedUser._id})
        return NextResponse.json({message: "user register successfully ",savedUser  })
 
     } catch (error:any) {
