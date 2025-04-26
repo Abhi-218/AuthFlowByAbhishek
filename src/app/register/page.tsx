@@ -1,4 +1,3 @@
-
 "use client";
 import React, { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
@@ -6,7 +5,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { User, Mail, Lock, ArrowRight } from "lucide-react";
+import { User, Mail, Lock, ArrowRight, Eye, EyeOff } from "lucide-react";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -15,51 +14,57 @@ export default function SignupPage() {
     email: "",
     password: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [buttonDisabled, setButtonDisabled] = useState(true);
 
   useEffect(() => {
-    if (user.username.length > 0 && user.email.length > 0 && user.password.length > 0) {
+    if (
+      user.username.length > 0 &&
+      user.email.length > 0 &&
+      user.password.length > 0
+    ) {
       setButtonDisabled(false);
     } else {
       setButtonDisabled(true);
     }
   }, [user]);
 
-  const onSignUp = async () => {
+  const onSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     try {
       setLoading(true);
       setButtonDisabled(true);
       toast.loading("Creating your account...");
-      
+
       await axios.post("/Api/Users/signup", user);
-      
+
       toast.dismiss();
-      
+
       // Add a small delay for better UX
       setTimeout(() => {
         router.push("/login");
       }, 800);
-      
     } catch (error: unknown) {
       toast.dismiss();
-    
+
       let errorMessage = "Something went wrong";
-    
+
       if (typeof error === "object" && error !== null) {
-        const maybeError = error as { response?: { data?: { error?: string } } };
+        const maybeError = error as {
+          response?: { data?: { error?: string } };
+        };
         if (maybeError.response?.data?.error) {
           errorMessage = maybeError.response.data.error;
         }
       }
-    
+
       toast.error(errorMessage);
-    
+
       console.log(error);
       setLoading(false);
       setButtonDisabled(false);
     }
-    
   };
 
   // Animation variants
@@ -70,19 +75,19 @@ export default function SignupPage() {
       transition: {
         duration: 0.6,
         when: "beforeChildren",
-        staggerChildren: 0.1
-      }
-    }
+        staggerChildren: 0.1,
+      },
+    },
   };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
   };
 
   const inputVariants = {
     focused: { scale: 1.02, boxShadow: "0 0 0 2px rgba(59, 130, 246, 0.5)" },
-    unfocused: { scale: 1, boxShadow: "none" }
+    unfocused: { scale: 1, boxShadow: "none" },
   };
 
   return (
@@ -106,12 +111,16 @@ export default function SignupPage() {
               <div className="bg-white/10 rounded-full p-4 backdrop-blur-sm">
                 <User size={36} className="text-white" />
               </div>
-              <h1 className="text-white text-2xl font-bold mt-4">Create Account</h1>
-              <p className="text-white/70 text-sm mt-2">Join our platform today</p>
+              <h1 className="text-white text-2xl font-bold mt-4">
+                Create Account
+              </h1>
+              <p className="text-white/70 text-sm mt-2">
+                Join our platform today
+              </p>
             </motion.div>
           </div>
 
-          <div className="p-8">
+          <form onSubmit={onSignUp} className="p-8">
             <div className="space-y-5">
               <motion.div className="relative" variants={itemVariants}>
                 <div className="absolute left-3 top-3 text-gray-400">
@@ -119,10 +128,14 @@ export default function SignupPage() {
                 </div>
                 <motion.input
                   type="text"
-                  onChange={(e) => setUser({ ...user, username: e.target.value })}
+                  onChange={(e) =>
+                    setUser({ ...user, username: e.target.value })
+                  }
                   value={user.username}
                   className="w-full bg-slate-700/50 text-white px-10 py-3 rounded-lg focus:outline-none border border-slate-600 focus:border-blue-500 transition-all"
                   required
+                  title="Username must be 3-20 characters and can contain letters, numbers, dots (.) and underscores (_)"
+                  pattern="^[a-zA-Z0-9._]{3,20}$"
                   placeholder="Username"
                   whileFocus="focused"
                   initial="unfocused"
@@ -141,6 +154,8 @@ export default function SignupPage() {
                   value={user.email}
                   className="w-full bg-slate-700/50 text-white px-10 py-3 rounded-lg focus:outline-none border border-slate-600 focus:border-blue-500 transition-all"
                   required
+                  title="Please enter a valid email address (example: name@example.com)"
+                  pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
                   placeholder="Email"
                   whileFocus="focused"
                   initial="unfocused"
@@ -154,17 +169,28 @@ export default function SignupPage() {
                   <Lock size={18} />
                 </div>
                 <motion.input
-                  type="password"
-                  onChange={(e) => setUser({ ...user, password: e.target.value })}
+                  type={showPassword ? "text" : "password"}
+                  onChange={(e) =>
+                    setUser({ ...user, password: e.target.value })
+                  }
                   value={user.password}
                   className="w-full bg-slate-700/50 text-white px-10 py-3 rounded-lg focus:outline-none border border-slate-600 focus:border-blue-500 transition-all"
                   required
+                  pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+                  title="Password must be at least 8 characters, with uppercase, lowercase, number, and special character."
                   placeholder="Password"
                   whileFocus="focused"
                   initial="unfocused"
                   animate="unfocused"
                   variants={inputVariants}
                 />
+                 <button
+    type="button"
+    className="absolute right-3 top-4 text-gray-400 hover:text-gray-200"
+    onClick={() => setShowPassword(!showPassword)}
+  >
+    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+  </button>
               </motion.div>
 
               <motion.div variants={itemVariants} className="pt-4">
@@ -174,15 +200,31 @@ export default function SignupPage() {
                       ? "bg-blue-500/50 cursor-not-allowed"
                       : "bg-blue-600 hover:bg-blue-700"
                   } text-white py-3 px-4 rounded-lg font-medium transition-all duration-200`}
-                  onClick={onSignUp}
+                  type="submit"
                   disabled={buttonDisabled || loading}
                   whileHover={!buttonDisabled ? { scale: 1.02 } : {}}
                   whileTap={!buttonDisabled ? { scale: 0.98 } : {}}
                 >
                   {loading ? (
-                    <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    <svg
+                      className="animate-spin h-5 w-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
                     </svg>
                   ) : (
                     <>
@@ -195,13 +237,16 @@ export default function SignupPage() {
               <motion.div variants={itemVariants} className="text-center mt-6">
                 <p className="text-gray-400">
                   Already have an account?{" "}
-                  <Link href="/login" className="text-blue-400 hover:text-blue-300 hover:underline transition-all">
+                  <Link
+                    href="/login"
+                    className="text-blue-400 hover:text-blue-300 hover:underline transition-all"
+                  >
                     Log In
                   </Link>
                 </p>
               </motion.div>
             </div>
-          </div>
+          </form>
         </motion.div>
 
         <motion.div
@@ -216,28 +261,28 @@ export default function SignupPage() {
         position="top-right"
         toastOptions={{
           style: {
-            background: '#333',
-            color: '#fff',
-            borderRadius: '8px',
+            background: "#333",
+            color: "#fff",
+            borderRadius: "8px",
           },
           success: {
             iconTheme: {
-              primary: '#22c55e',
-              secondary: '#fff',
+              primary: "#22c55e",
+              secondary: "#fff",
             },
           },
           error: {
             iconTheme: {
-              primary: '#ef4444',
-              secondary: '#fff',
+              primary: "#ef4444",
+              secondary: "#fff",
             },
           },
           loading: {
             iconTheme: {
-              primary: '#3b82f6',
-              secondary: '#fff',
+              primary: "#3b82f6",
+              secondary: "#fff",
             },
-          }
+          },
         }}
       />
     </div>

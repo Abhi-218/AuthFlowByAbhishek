@@ -6,11 +6,12 @@ import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Lock, Mail, LogIn } from "lucide-react";
+import { Lock, Mail, LogIn,Eye, EyeOff } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
   const [user, setUser] = useState({ email: "", password: "" });
+    const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [buttonDisabled, setButtonDisabled] = useState(true);
 
@@ -18,7 +19,8 @@ export default function LoginPage() {
     setButtonDisabled(!(user.email && user.password));
   }, [user]);
 
-  const onLogin = async () => {
+  const onLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     try {
       setLoading(true);
       setButtonDisabled(true);
@@ -98,7 +100,7 @@ export default function LoginPage() {
             </motion.div>
           </div>
 
-          <div className="p-8">
+          <form className="p-8" onSubmit={onLogin} >
             <div className="space-y-5">
               <motion.div className="relative" variants={itemVariants}>
                 <div className="absolute left-3 top-3 text-gray-400">
@@ -113,6 +115,8 @@ export default function LoginPage() {
                   className="w-full bg-slate-700/50 text-white px-10 py-3 rounded-lg focus:outline-none border border-slate-600 focus:border-blue-500 transition-all"
                   required
                   placeholder="Email"
+                  title="Please enter a valid email address (example: name@example.com)"
+                  pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"  
                   whileFocus="focused"
                   initial="unfocused"
                   animate="unfocused"
@@ -125,19 +129,28 @@ export default function LoginPage() {
                   <Lock size={18} />
                 </div>
                 <motion.input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   onChange={(e) =>
                     setUser({ ...user, password: e.target.value })
                   }
                   value={user.password}
                   className="w-full bg-slate-700/50 text-white px-10 py-3 rounded-lg focus:outline-none border border-slate-600 focus:border-blue-500 transition-all"
                   required
+                  pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+                  title="Password must be at least 8 characters, with uppercase, lowercase, number, and special character."
                   placeholder="Password"
                   whileFocus="focused"
                   initial="unfocused"
                   animate="unfocused"
                   variants={inputVariants}
                 />
+                 <button
+    type="button"
+    className="absolute right-3 top-4 text-gray-400 hover:text-gray-200"
+    onClick={() => setShowPassword(!showPassword)}
+  >
+    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+  </button>
               </motion.div>
 
               <motion.div variants={itemVariants} className="pt-4">
@@ -147,7 +160,7 @@ export default function LoginPage() {
                       ? "bg-blue-500/50 cursor-not-allowed"
                       : "bg-blue-600 hover:bg-blue-700"
                   } text-white py-3 px-4 rounded-lg font-medium transition-all duration-200`}
-                  onClick={onLogin}
+                  type="submit"
                   disabled={buttonDisabled || loading}
                   whileHover={!buttonDisabled ? { scale: 1.02 } : {}}
                   whileTap={!buttonDisabled ? { scale: 0.98 } : {}}
@@ -193,7 +206,7 @@ export default function LoginPage() {
                 </p>
               </motion.div>
             </div>
-          </div>
+          </form>
         </motion.div>
         <motion.div
           variants={itemVariants}

@@ -7,9 +7,12 @@ import Link from "next/link";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import React from "react";
+import { Eye, EyeOff } from "lucide-react"; // already using lucide-react
 
 export default function Hero() {
   const [isVisible, setIsVisible] = useState(false);
+  const [showPassword, setShowPassword] = useState(false); // Add this state
 
   useEffect(() => {
     setIsVisible(true);
@@ -23,7 +26,8 @@ export default function Hero() {
     password: "",
   });
 
-  const OnLogin = async () => {
+  const OnLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     try {
       //  toast.loading('please wait')
       const responce = await axios.post("/Api/Users/login", user);
@@ -99,10 +103,14 @@ export default function Hero() {
             >
               <div className="bg-white rounded-lg shadow-xl overflow-hidden">
                 <div className="px-4 py-5 sm:p-6">
-                  <div className="space-y-6">
+                  <form
+                    className="space-y-6"
+                    onSubmit={OnLogin}
+                    action={"/profile"}
+                  >
                     <div>
                       <h3 className="text-lg font-medium leading-6 text-gray-900">
-                        Sign in
+                        Login
                       </h3>
                     </div>
                     <div className="space-y-1">
@@ -118,7 +126,9 @@ export default function Hero() {
                           name="email"
                           type="email"
                           autoComplete="email"
+                          pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
                           required
+                          title="Please enter a valid email address (example: name@example.com)"
                           className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                           placeholder="you@example.com"
                           value={user.email}
@@ -135,13 +145,15 @@ export default function Hero() {
                       >
                         Password
                       </label>
-                      <div className="mt-1">
+                      <div className="mt-1 relative">
                         <input
                           id="password"
                           name="password"
-                          type="password"
+                          type={showPassword ? "text" : "password"}
                           autoComplete="current-password"
                           required
+                          pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+                          title="Password must be at least 8 characters, with uppercase, lowercase, number, and special character."
                           className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                           placeholder="••••••••"
                           value={user.password}
@@ -149,6 +161,17 @@ export default function Hero() {
                             setUser({ ...user, password: e.target.value });
                           }}
                         />
+                        <button
+                          type="button"
+                          className="absolute right-3 top-3 text-gray-400 hover:text-gray-200"
+                          onClick={() => setShowPassword(!showPassword)}
+                        >
+                          {showPassword ? (
+                            <EyeOff size={18} />
+                          ) : (
+                            <Eye size={18} />
+                          )}
+                        </button>
                       </div>
                     </div>
                     <div className="flex items-center justify-between">
@@ -166,25 +189,24 @@ export default function Hero() {
                           Remember me
                         </label>
                       </div>
-                      <div className="text-sm">
+                      {/* <div className="text-sm">
                         <a
                           href="#"
                           className="font-medium text-blue-600 hover:text-blue-500"
                         >
                           Forgot your password?
                         </a>
-                      </div>
+                      </div> */}
                     </div>
                     <div>
                       <button
                         type="submit"
                         className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                        onClick={OnLogin}
                       >
                         Login
                       </button>
                     </div>
-                    <div className="mt-6">
+                    {/* <div className="mt-6">
                       <div className="relative">
                         <div className="absolute inset-0 flex items-center">
                           <div className="w-full border-t border-gray-300" />
@@ -207,8 +229,8 @@ export default function Hero() {
                           </button>
                         </div>
                       </div>
-                    </div>
-                  </div>
+                    </div> */}
+                  </form>
                 </div>
               </div>
             </motion.div>
