@@ -4,7 +4,7 @@ import { dbConnect } from "@/dbConfig/dbCongfig";
 import emailsender from "@/helpers/emailsender";
 import { EmailVerification } from "@/Models/emailVerification";
 import User from "@/Models/userModel";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest} from "next/server";
 
 export async function POST(req: NextRequest) {
   const { email, path } = await req.json();

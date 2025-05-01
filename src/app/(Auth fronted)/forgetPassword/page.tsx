@@ -17,7 +17,7 @@ import {
   Key,
 } from "lucide-react";
 
-export default function forgetPasswordPage() {
+export default function ForgetPasswordPage() {
   const router = useRouter();
   const [user, setUser] = useState({
     email: "",

@@ -1,9 +1,8 @@
 
-import { register } from 'module';
-import nodemailer from 'nodemailer';
+import nodemailer, { SentMessageInfo } from 'nodemailer';
 
 
-export default function emailsender(to: String, code: String , path: String) {
+export default function emailsender(to: string, code: string , path: string) {
 
     const transporter = nodemailer.createTransport({
         service: "gmail", // or another email provider
@@ -50,12 +49,12 @@ export default function emailsender(to: String, code: String , path: String) {
     </table> </body>`,
     };
 
-    transporter.sendMail(mailOptions, (error: any, info: any) => {
+    transporter.sendMail(mailOptions, (error: Error | null, info: SentMessageInfo) => {
         if (error) {
-            console.log("Error sending email:", error);
+          console.log("Error sending email:", error);
         } else {
-            console.log("Email sent successfully:", info.response);
+          console.log("Email sent successfully:", info.response);
         }
-    });
+      });
 
 }
