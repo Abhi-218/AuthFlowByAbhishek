@@ -62,17 +62,17 @@ export default function SignupPage() {
         email: user.email,
         path : "register",
       });
-      console.log("send code res  === ", res.data?.alreadyAccount);
+      toast.dismiss();
       if(!res.data?.noAccount){
         toast.error(res.data.message);
         setTimeout(() => {
           router.push("/login");
         }, 800);
       }
-
-      toast.dismiss();
-      toast.success(res.data.message);
-      setCodeRequested(true);
+      else{
+        toast.success(res.data.message);
+        setCodeRequested(true);
+      }
     } catch (error: unknown) {
       toast.dismiss();
 
