@@ -63,7 +63,8 @@ export default function SignupPage() {
         path : "register",
       });
       console.log("send code res  === ", res.data?.alreadyAccount);
-      if(res.data?.alreadyAccount){
+      if(!res.data?.noAccount){
+        toast.error(res.data.message);
         setTimeout(() => {
           router.push("/login");
         }, 800);
