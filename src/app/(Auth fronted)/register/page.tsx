@@ -63,13 +63,12 @@ export default function SignupPage() {
         path : "register",
       });
       toast.dismiss();
-      if(!res.data?.noAccount){
+      if(!res.data?.codeSended){
         toast.error(res.data.message);
         setTimeout(() => {
           router.push("/login");
         }, 800);
-      }
-      else{
+      }else{
         toast.success(res.data.message);
         setCodeRequested(true);
       }

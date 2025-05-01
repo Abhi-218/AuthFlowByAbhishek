@@ -57,7 +57,7 @@ export default function ForgetPasswordPage() {
         path: "forgetPassword",
       });
       toast.dismiss();
-      if (res.data?.noAccount) {
+      if (!res.data?.codeSended) {
         toast.error(res.data?.message);
         setTimeout(() => {
           router.push("/register");
