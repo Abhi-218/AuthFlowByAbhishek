@@ -189,14 +189,14 @@ export default function Hero() {
                           Remember me
                         </label>
                       </div>
-                      {/* <div className="text-sm">
-                        <a
-                          href="#"
+                      <div className="text-sm">
+                        <Link
+                          href={"forgetPassword"}
                           className="font-medium text-blue-600 hover:text-blue-500"
                         >
                           Forgot your password?
-                        </a>
-                      </div> */}
+                        </Link>
+                      </div>
                     </div>
                     <div>
                       <button

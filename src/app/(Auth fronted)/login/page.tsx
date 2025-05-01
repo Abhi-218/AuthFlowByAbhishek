@@ -1,4 +1,3 @@
-
 "use client";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -6,12 +5,12 @@ import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Lock, Mail, LogIn,Eye, EyeOff } from "lucide-react";
+import { Lock, Mail, LogIn, Eye, EyeOff } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
   const [user, setUser] = useState({ email: "", password: "" });
-    const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [buttonDisabled, setButtonDisabled] = useState(true);
 
@@ -27,7 +26,6 @@ export default function LoginPage() {
       toast.loading("Logging you in...");
 
       await axios.post("/Api/Users/login", user);
-  
 
       toast.dismiss();
       toast.success("Login successful!");
@@ -35,19 +33,23 @@ export default function LoginPage() {
       setTimeout(() => {
         router.push("/profile");
       }, 800);
+      toast.dismiss();
     } catch (error: unknown) {
       toast.dismiss();
       if (error instanceof Error) {
         // If the error has a "response" property (like Axios errors)
-        const axiosError = error as { response?: { data?: { error?: string } } };
-        toast.error(axiosError.response?.data?.error || "Check your credentials");
+        const axiosError = error as {
+          response?: { data?: { error?: string } };
+        };
+        toast.error(
+          axiosError.response?.data?.error || "Check your credentials"
+        );
       } else {
         toast.error("Check your credentials");
       }
       setLoading(false);
       setButtonDisabled(false);
     }
-    
   };
 
   const containerVariants = {
@@ -73,7 +75,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-700 flex justify-center items-center p-4">
+    <div className="min-h-screen mt-10 bg-gradient-to-br from-slate-900 to-slate-700 flex justify-center items-center p-4">
       <motion.div
         initial="hidden"
         animate="visible"
@@ -100,7 +102,7 @@ export default function LoginPage() {
             </motion.div>
           </div>
 
-          <form className="p-8" onSubmit={onLogin} >
+          <form className="p-8" onSubmit={onLogin}>
             <div className="space-y-5">
               <motion.div className="relative" variants={itemVariants}>
                 <div className="absolute left-3 top-3 text-gray-400">
@@ -108,15 +110,13 @@ export default function LoginPage() {
                 </div>
                 <motion.input
                   type="email"
-                  onChange={(e) =>
-                    setUser({ ...user, email: e.target.value })
-                  }
+                  onChange={(e) => setUser({ ...user, email: e.target.value })}
                   value={user.email}
                   className="w-full bg-slate-700/50 text-white px-10 py-3 rounded-lg focus:outline-none border border-slate-600 focus:border-blue-500 transition-all"
                   required
                   placeholder="Email"
                   title="Please enter a valid email address (example: name@example.com)"
-                  pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"  
+                  pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
                   whileFocus="focused"
                   initial="unfocused"
                   animate="unfocused"
@@ -144,16 +144,24 @@ export default function LoginPage() {
                   animate="unfocused"
                   variants={inputVariants}
                 />
-                 <button
-    type="button"
-    className="absolute right-3 top-4 text-gray-400 hover:text-gray-200"
-    onClick={() => setShowPassword(!showPassword)}
-  >
-    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-  </button>
+                <button
+                  type="button"
+                  className="absolute right-3 top-4 text-gray-400 hover:text-gray-200"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </motion.div>
+              <motion.div variants={itemVariants} className="text-right">
+                <Link
+                  href={"/forgetPassword"}
+                  className="text-sm text-blue-400 hover:text-blue-300 hover:underline transition-all"
+                >
+                  Forgot Password?
+                </Link>
               </motion.div>
 
-              <motion.div variants={itemVariants} className="pt-4">
+              <motion.div variants={itemVariants} className="">
                 <motion.button
                   className={`w-full flex items-center justify-center gap-2 ${
                     buttonDisabled

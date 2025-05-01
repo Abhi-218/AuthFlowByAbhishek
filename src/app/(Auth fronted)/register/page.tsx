@@ -5,7 +5,17 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { User, Mail, Lock, ArrowRight, Eye, EyeOff } from "lucide-react";
+import {
+  User,
+  Mail,
+  Lock,
+  ArrowRight,
+  Eye,
+  EyeOff,
+  Send,
+  ShieldCheck,
+  Key,
+} from "lucide-react";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -14,21 +24,113 @@ export default function SignupPage() {
     email: "",
     password: "",
   });
+  const [verificationCode, setVerificationCode] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [codeSending, setCodeSending] = useState(false);
+  const [codeRequested, setCodeRequested] = useState(false);
   const [buttonDisabled, setButtonDisabled] = useState(true);
+  const [emailChecked, setEmailChecked] = useState(false);
 
   useEffect(() => {
     if (
       user.username.length > 0 &&
       user.email.length > 0 &&
-      user.password.length > 0
+      user.password.length > 0 &&
+      emailChecked
     ) {
       setButtonDisabled(false);
     } else {
       setButtonDisabled(true);
     }
-  }, [user]);
+  }, [user, codeRequested, emailChecked]);
+
+  const sendVerificationCode = async () => {
+    // Email validation
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(user.email)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+
+    try {
+      setCodeSending(true);
+      toast.loading("Sending verification code...");
+
+      // Replace with your actual API endpoint for sending code
+     const res = await axios.post("/Api/Users/emailverification/sendCode", {
+        email: user.email,
+        path : "register",
+      });
+      console.log("send code res  === ", res.data?.alreadyAccount);
+      if(res.data?.alreadyAccount){
+        setTimeout(() => {
+          router.push("/login");
+        }, 800);
+      }
+
+      toast.dismiss();
+      toast.success(res.data.message);
+      setCodeRequested(true);
+    } catch (error: unknown) {
+      toast.dismiss();
+
+      let errorMessage = "Failed to send verification code";
+
+      if (typeof error === "object" && error !== null) {
+        const maybeError = error as {
+          response?: { data?: { error?: string } };
+        };
+        if (maybeError.response?.data?.error) {
+          errorMessage = maybeError.response.data.error;
+        }
+      }
+
+      toast.error(errorMessage);
+      console.log(error);
+    } finally {
+      setCodeSending(false);
+    }
+  };
+  const checkVerificationCode = async () => {
+    // Email validation
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(user.email)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+
+    try {
+      setCodeSending(true);
+      toast.loading("verifing code...");
+
+      await axios.post("/Api/Users/emailverification/checkCode", {
+        email: user.email,
+        code: verificationCode,
+      });
+      toast.dismiss();
+      toast.success("Code verified");
+      setEmailChecked(true);
+    } catch (error: unknown) {
+      toast.dismiss();
+
+      let errorMessage = "Failed to verify code";
+
+      if (typeof error === "object" && error !== null) {
+        const maybeError = error as {
+          response?: { data?: { error?: string } };
+        };
+        if (maybeError.response?.data?.error) {
+          errorMessage = maybeError.response.data.error;
+        }
+      }
+
+      toast.error(errorMessage);
+      console.log(error);
+    } finally {
+      setCodeSending(false);
+    }
+  };
 
   const onSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -40,6 +142,7 @@ export default function SignupPage() {
       await axios.post("/Api/Users/signup", user);
 
       toast.dismiss();
+      toast.success("Account created successfully!");
 
       // Add a small delay for better UX
       setTimeout(() => {
@@ -91,7 +194,7 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-700 flex justify-center items-center p-4">
+    <div className="min-h-screen mt-10 bg-gradient-to-br from-slate-900 to-slate-700 flex justify-center items-center p-4">
       <motion.div
         initial="hidden"
         animate="visible"
@@ -123,7 +226,7 @@ export default function SignupPage() {
           <form onSubmit={onSignUp} className="p-8">
             <div className="space-y-5">
               <motion.div className="relative" variants={itemVariants}>
-                <div className="absolute left-3 top-3 text-gray-400">
+                <div className="absolute left-3 top-4 text-gray-400">
                   <User size={18} />
                 </div>
                 <motion.input
@@ -143,16 +246,18 @@ export default function SignupPage() {
                   variants={inputVariants}
                 />
               </motion.div>
-
-              <motion.div className="relative" variants={itemVariants}>
-                <div className="absolute left-3 top-3 text-gray-400">
+               <motion.div
+                              className="relative flex w-full bg-slate-700/50 text-whiteoutline-none rounded-lg focus:outline-none border focus-within:shadow-[0_0_0_2px_rgba(59,130,246,0.5)] border-slate-600 focus-within:border-blue-500 focus-within:scale-105"
+                              variants={itemVariants}
+                            >
+                <div className="absolute left-3 top-4 text-gray-400">
                   <Mail size={18} />
                 </div>
                 <motion.input
                   type="email"
                   onChange={(e) => setUser({ ...user, email: e.target.value })}
                   value={user.email}
-                  className="w-full bg-slate-700/50 text-white px-10 py-3 rounded-lg focus:outline-none border border-slate-600 focus:border-blue-500 transition-all"
+                  className="w-full bg-slate-700/50 text-white pl-10 pr-3 py-3 rounded-l-lg outline-none border border-slate-600 transition-all"
                   required
                   title="Please enter a valid email address (example: name@example.com)"
                   pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
@@ -160,12 +265,125 @@ export default function SignupPage() {
                   whileFocus="focused"
                   initial="unfocused"
                   animate="unfocused"
-                  variants={inputVariants}
+                  disabled={emailChecked}
+                  // variants={inputVariants}
                 />
+                <button
+                  type="button"
+                  onClick={sendVerificationCode}
+                  disabled={!user.email || codeSending || emailChecked}
+                  className={`${
+                    !user.email || codeSending || emailChecked
+                      ? "bg-blue-500/50 cursor-not-allowed"
+                      : "bg-blue-600 hover:bg-blue-700"
+                  } text-white py-1 px-2 rounded-r-lg text-xs font-medium transition-all duration-200 flex items-center gap-1`}
+                >
+                  {codeSending ? (
+                    <svg
+                      className="animate-spin h-3 w-3 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                  ) : (
+                    <>
+                      <Send size={24} /> Send Code
+                    </>
+                  )}
+                </button>
               </motion.div>
 
+              {codeRequested && (
+                <motion.div
+                  className="relative"
+                  variants={itemVariants}
+                  initial="hidden"
+                  animate="visible"
+                >
+                  <div className="absolute left-3 top-4 text-gray-400">
+                    <Key size={18} />
+                  </div>
+                  <motion.input
+                    type="text"
+                    onChange={(e) => setVerificationCode(e.target.value)}
+                    value={verificationCode}
+                    disabled={emailChecked || !codeRequested}
+                    className="w-full bg-slate-700/50 text-white px-10 py-3 rounded-lg focus:outline-none border border-slate-600 focus:border-blue-500 transition-all"
+                    required
+                    placeholder="Verification Code"
+                    whileFocus="focused"
+                    initial="unfocused"
+                    animate="unfocused"
+                    variants={inputVariants}
+                  />
+                  <button
+                    type="button"
+                    onClick={checkVerificationCode}
+                    disabled={
+                      !codeRequested ||
+                      !(verificationCode.length > 0) ||
+                      emailChecked
+                    }
+                    className={`absolute right-3 top-2.5 ${
+                      !verificationCode
+                        ? "bg-blue-500/50 cursor-not-allowed"
+                        : emailChecked
+                        ? "bg-green-500"
+                        : "bg-blue-600 hover:bg-blue-700"
+                    } text-white py-1 px-2 rounded-md text-sm font-medium transition-all duration-200 flex items-center gap-1`}
+                  >
+                    {codeSending ? (
+                      <svg
+                        className="animate-spin h-3 w-3 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                      </svg>
+                    ) : (
+                      <>
+                        {emailChecked ? (
+                          <>
+                            <ShieldCheck size={12} /> Verified{" "}
+                          </>
+                        ) : (
+                          "Verify"
+                        )}
+                      </>
+                    )}
+                  </button>
+                </motion.div>
+              )}
+
               <motion.div className="relative" variants={itemVariants}>
-                <div className="absolute left-3 top-3 text-gray-400">
+                <div className="absolute left-3 top-4 text-gray-400">
                   <Lock size={18} />
                 </div>
                 <motion.input
@@ -184,13 +402,13 @@ export default function SignupPage() {
                   animate="unfocused"
                   variants={inputVariants}
                 />
-                 <button
-    type="button"
-    className="absolute right-3 top-4 text-gray-400 hover:text-gray-200"
-    onClick={() => setShowPassword(!showPassword)}
-  >
-    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-  </button>
+                <button
+                  type="button"
+                  className="absolute right-3 top-4 text-gray-400 hover:text-gray-200"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
               </motion.div>
 
               <motion.div variants={itemVariants} className="pt-4">
